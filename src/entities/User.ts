@@ -26,20 +26,14 @@ export class User {
   @Column({ name: "wallet_address" })
   walletAddress!: string;
 
-  @Column({ name: "credential_id", unique: true })
-  credentialId!: string; // ✅ Stores WebAuthn credential ID
-
-  @Column({ name: "public_key", type: "text" })
-  publicKey!: string; // ✅ Stores COSE-encoded public key
-
-  @Column({ name: "challenge", type: "text" })
-  challenge!: string; // ✅ Stores challenge for verification
-
   @Column({ name: "is_verified", default: false })
   isVerified!: boolean;
 
   @Column({ name: "is_active", default: false })
   isActive!: boolean;
+
+  @Column({ name: "has_passkey", default: false })
+  hasPasskey!: boolean;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;

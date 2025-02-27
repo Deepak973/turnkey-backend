@@ -10,11 +10,9 @@ export const registerUser = async (
   walletAddress: string,
   turnkeyOrganizationId: string,
   turnkeyUserId: string,
-  credentialId: string,
-  publicKey: string,
-  challenge: string,
-  isVerified: boolean = false,
-  isActive: boolean = false
+  isVerified: boolean,
+  isActive: boolean,
+  hasPasskey: boolean
 ) => {
   const existingUser = await userRepository.findOne({ where: { email } });
 
@@ -29,11 +27,9 @@ export const registerUser = async (
     walletAddress,
     turnkeyOrganizationId,
     turnkeyUserId,
-    credentialId,
-    publicKey,
-    challenge,
     isVerified,
     isActive,
+    hasPasskey,
   });
 
   await userRepository.save(user);
@@ -64,6 +60,21 @@ export const findUserById = async (id: string) => {
 export const updateUser = async (id: string, updateData: Partial<User>) => {
   await userRepository.update(id, updateData);
   return await findUserById(id);
+};
+
+export const updateUserByEmail = async (
+  email: string,
+  updateData: Partial<User>
+) => {
+  // First find the user by email to get their ID
+  const user = await findUserByEmail(email);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Then update using the ID
+  await userRepository.update(user.id, updateData);
+  return await findUserByEmail(email);
 };
 
 export const findUserByOrganizationId = async (organizationId: string) => {
